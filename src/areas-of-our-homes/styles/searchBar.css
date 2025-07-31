@@ -674,3 +674,145 @@
   align-items: center;
   justify-content: center;
 }
+
+/* Mobile Search Header */
+.mobile-search-header {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  background: white;
+  border-bottom: 1px solid #ebebeb;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  padding: 8px;
+  margin-right: 16px;
+  cursor: pointer;
+  color: #222222;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.back-button:hover {
+  background-color: #f7f7f7;
+}
+
+.location-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #222222;
+}
+
+/* Mobile Search Container */
+.mobile-search-container {
+  padding: 20px;
+  background: white;
+}
+
+.mobile-search-bar {
+  display: flex;
+  background: white;
+  border: 2px solid #dddddd;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.mobile-search-section {
+  flex: 1;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mobile-search-section.active {
+  border-color: #ff6b35;
+  background-color: #fff5f2;
+}
+
+.mobile-search-section:first-child.active {
+  border: 2px solid #ff6b35;
+  border-radius: 16px;
+  margin: -2px;
+}
+
+.mobile-section-icon {
+  color: #717171;
+  flex-shrink: 0;
+}
+
+.mobile-section-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: #222222;
+}
+
+.mobile-divider {
+  width: 1px;
+  background-color: #dddddd;
+  margin: 12px 0;
+}
+
+.pricing-info {
+  text-align: center;
+  font-size: 14px;
+  color: #ff6b35;
+  margin-bottom: 24px;
+  font-weight: 500;
+}
+
+.mobile-action-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.filter-button,
+.map-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: 1px solid #dddddd;
+  border-radius: 24px;
+  background: white;
+  font-size: 16px;
+  font-weight: 500;
+  color: #222222;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-button:hover,
+.map-button:hover {
+  border-color: #222222;
+}
+
+/* Hide desktop search bar on mobile by default */
+@media (max-width: 768px) {
+  .search-container {
+    display: none;
+  }
+  
+  .searchbar-bg {
+    display: block;
+    margin: 0;
+  }
+}
+
+/* Show desktop search bar only on larger screens */
+@media (min-width: 769px) {
+  .mobile-search-header,
+  .mobile-search-container {
+    display: none;
+  }
+  
+  .search-container {
+    display: block;
+  }
+}

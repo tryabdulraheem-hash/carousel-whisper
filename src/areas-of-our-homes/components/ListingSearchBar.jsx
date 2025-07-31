@@ -347,95 +347,79 @@ export default function SearchBar({ location, setLocation }) {
 
   return (
     <>
-      <div className="searchbar-bg"> {/* Added the background image class */}
-        <div className="search-container">
-          <div className="search-bar">
-            {/* Location Section */}
-            <div
-              className={`search-section ${activeSection === "location" ? "active" : ""}`}
-              onClick={() => setActiveSection(activeSection === "location" ? null : "location")}
-            >
-              <div className="section-content">
-                <label>Where</label>
-                <input
-                  type="text"
-                  placeholder="Search destinations"
-                  value={location}
-                  onChange={(e) => handleLocationSearch(e.target.value)}
-                  className="location-input"
-                />
-              </div>
-            </div>
+      {/* Mobile-first design with back button and location */}
+      <div className="mobile-search-header">
+        <button className="back-button" onClick={() => navigate(-1)}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <polyline points="15,18 9,12 15,6"></polyline>
+          </svg>
+        </button>
+        <span className="location-title">{location || "Florida"}</span>
+      </div>
 
-            <div className="divider"></div>
-
-            {/* When Section - Combined Check-in/Check-out for flexible view */}
-            {calendarView === "flexible" ? (
-              <div
-                className={`search-section when-section ${activeSection === "when" ? "active" : ""}`}
-                onClick={() => setActiveSection(activeSection === "when" ? null : "when")}
-              >
-                <div className="section-content">
-                  <label>When</label>
-                  <span className="date-text">{getWhenText()}</span>
-                </div>
-              </div>
-            ) : (
-              <>
-                {/* Check-in Section */}
-                <div
-                  className={`search-section ${activeSection === "checkin" ? "active" : ""}`}
-                  onClick={() => setActiveSection(activeSection === "checkin" ? null : "checkin")}
-                >
-                  <div className="section-content">
-                    <label>Check in</label>
-                    <span className="date-text">{checkIn ? formatDate(checkIn) : "Add dates"}</span>
-                  </div>
-                </div>
-
-                <div className="divider"></div>
-
-                {/* Check-out Section */}
-                <div
-                  className={`search-section ${activeSection === "checkout" ? "active" : ""}`}
-                  onClick={() => setActiveSection(activeSection === "checkout" ? null : "checkout")}
-                >
-                  <div className="section-content">
-                    <label>Check out</label>
-                    <span className="date-text">{checkOut ? formatDate(checkOut) : "Add dates"}</span>
-                  </div>
-                </div>
-              </>
-            )
-            }
-
-            <div className="divider"></div>
-
-            {/* Guests Section */}
-            <div
-              className={`search-section guests-section ${activeSection === "guests" ? "active" : ""}`}
-              onClick={() => setActiveSection(activeSection === "guests" ? null : "guests")}
-            >
-              <div className="section-content">
-                <label>Who</label>
-                <span className="guest-text">{totalGuests > 0 ? formatGuestText() : "Add guests"}</span>
-              </div>
-            </div>
-            <div className="divider"></div>
-            <button
-              className="search-button"
-              onClick={handleSearch}
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") handleSearch()
-              }}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="m21 21-4.35-4.35"></path>
+      <div className="mobile-search-container">
+        {/* Main search sections */}
+        <div className="mobile-search-bar">
+          {/* Anytime Section */}
+          <div
+            className={`mobile-search-section anytime-section ${activeSection === "dates" ? "active" : ""}`}
+            onClick={() => setActiveSection(activeSection === "dates" ? null : "dates")}
+          >
+            <div className="mobile-section-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
               </svg>
-            </button>
-          </div >
+            </div>
+            <span className="mobile-section-text">
+              {checkIn && checkOut ? `${formatDate(checkIn)} - ${formatDate(checkOut)}` : "Anytime"}
+            </span>
+          </div>
+
+          <div className="mobile-divider"></div>
+
+          {/* Guests Section */}
+          <div
+            className={`mobile-search-section guests-section ${activeSection === "guests" ? "active" : ""}`}
+            onClick={() => setActiveSection(activeSection === "guests" ? null : "guests")}
+          >
+            <div className="mobile-section-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </div>
+            <span className="mobile-section-text">
+              {totalGuests > 0 ? formatGuestText() : "Guests"}
+            </span>
+          </div>
+        </div>
+
+        {/* Pricing info */}
+        <div className="pricing-info">
+          Choose dates for accurate pricing and availability
+        </div>
+
+        {/* Action buttons */}
+        <div className="mobile-action-buttons">
+          <button className="filter-button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <polygon points="22,3 2,3 10,12.46 10,19 14,21 14,12.46 22,3"></polygon>
+            </svg>
+            Filter
+          </button>
+          <button className="map-button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <polygon points="1,6 1,22 8,18 16,22 23,18 23,2 16,6 8,2 1,6"></polygon>
+              <line x1="8" y1="2" x2="8" y2="18"></line>
+              <line x1="16" y1="6" x2="16" y2="22"></line>
+            </svg>
+            Map
+          </button>
+        </div>
+      </div>
 
           {/* Location Dropdown */}
           {
