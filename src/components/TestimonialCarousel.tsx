@@ -46,28 +46,55 @@ export const TestimonialCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [wheelRotation, setWheelRotation] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  // Calculate one-directional (clockwise) rotation
+  const calculateClockwiseRotation = (fromIndex: number, toIndex: number) => {
+    const totalTestimonials = testimonials.length;
+    const fromAngle = fromIndex * (360 / totalTestimonials);
+    const toAngle = toIndex * (360 / totalTestimonials);
+    
+    // Always rotate clockwise (positive direction)
+    let rotationDifference = toAngle - fromAngle;
+    
+    // If we need to go backwards, instead go the long way around clockwise
+    if (rotationDifference < 0) {
+      rotationDifference += 360;
+    }
+    
+    return wheelRotation + rotationDifference;
+  };
 
   // Auto-advance testimonials every 5 seconds
   useEffect(() => {
-    if (!isPlaying) return;
+    if (!isPlaying || isAnimating) return;
 
     const interval = setInterval(() => {
       setCurrentIndex((prev) => {
         const nextIndex = (prev + 1) % testimonials.length;
-        // Rotate wheel to position the active avatar at the front
-        setWheelRotation(nextIndex * (360 / testimonials.length));
+        const newRotation = calculateClockwiseRotation(prev, nextIndex);
+        setWheelRotation(newRotation);
         return nextIndex;
       });
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [isPlaying]);
+  }, [isPlaying, isAnimating, wheelRotation]);
 
   const selectTestimonial = (index: number) => {
+    if (index === currentIndex || isAnimating) return;
+    
+    setIsAnimating(true);
+    const newRotation = calculateClockwiseRotation(currentIndex, index);
+    setWheelRotation(newRotation);
     setCurrentIndex(index);
-    setWheelRotation(index * (360 / testimonials.length));
     setIsPlaying(false);
-    setTimeout(() => setIsPlaying(true), 3000);
+    
+    // Resume auto-play and clear animation lock after transition
+    setTimeout(() => {
+      setIsAnimating(false);
+      setIsPlaying(true);
+    }, 1000);
   };
 
   const goToPrevious = () => {
@@ -120,9 +147,12 @@ export const TestimonialCarousel = () => {
               
               {/* Avatar Wheel */}
               <div 
-                className="relative w-full h-full transition-transform duration-1000 ease-out"
+                className={`relative w-full h-full transition-transform ease-in-out ${
+                  isAnimating ? 'duration-1000' : 'duration-700'
+                }`}
                 style={{ 
-                  transform: `rotate(${-wheelRotation}deg)` 
+                  transform: `rotate(${-wheelRotation}deg)`,
+                  transformOrigin: 'center center'
                 }}
               >
                 {testimonials.map((testimonial, index) => {
@@ -195,8 +225,8 @@ export const TestimonialCarousel = () => {
           {/* Right Side - Testimonial Content */}
           <div className="flex-1 ml-32 lg:ml-48">
             <div 
-              key={currentTestimonial.id} 
-              className="bg-card rounded-2xl p-8 shadow-xl border border-testimonial-border/20 animate-slide-in max-w-2xl"
+              key={`${currentTestimonial.id}-${currentIndex}`}
+              className="bg-card rounded-2xl p-8 shadow-xl border border-testimonial-border/20 animate-smooth-slide max-w-2xl"
             >
               {/* Quote Icon */}
               <div className="text-6xl text-primary/20 font-serif mb-4">"</div>
